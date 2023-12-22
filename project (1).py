@@ -94,7 +94,7 @@ class AboutWindow:
         self.screen = screen
         self.GREEN = (0, 200, 0)
         self.font = pygame.font.Font(None, 25)
-        self.version = "Версия игры: 1.0"
+        self.version = "Версия игры: 0.1"
         self.developers = "Разработчики: "
         self.developers2 = "Швайкова Кира, "
         self.developers3 = "Симонова Арина"
