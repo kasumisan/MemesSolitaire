@@ -1,5 +1,6 @@
 import pygame
 import sys
+import os
 
 
 class GameLauncher:
@@ -74,7 +75,7 @@ class GameLauncher:
         stats_window.show_window()
 
     def show_about_window(self):
-        about_window = AboutWindow()
+        about_window = AboutWindow(self.screen)
         about_window.show_window()
 
 
@@ -89,8 +90,53 @@ class StatsWindow:
 
 
 class AboutWindow:
+    def __init__(self, screen):
+        self.screen = screen
+        self.GREEN = (0, 200, 0)
+        self.font = pygame.font.Font(None, 25)
+        self.version = "Версия игры: 1.0"
+        self.developers = "Разработчики: "
+        self.developers2 = "Швайкова Кира, "
+        self.developers3 = "Симонова Арина"
+        self.copyright = "© 2023 Все права защищены"
+        self.image = pygame.image.load('data/rayan1.png')
+
+
     def show_window(self):
-        pass
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+            self.screen.fill(self.GREEN)
+            text_y = 100
+            version_text = self.font.render(self.version, True, (255, 255, 255))
+            self.screen.blit(version_text, (50, text_y))
+
+            text_y += 50
+            developers_text = self.font.render(self.developers, True, (255, 255, 255))
+            self.screen.blit(developers_text, (50, text_y))
+
+            text_y += 50
+            developers_text = self.font.render(self.developers2, True, (255, 255, 255))
+            self.screen.blit(developers_text, (50, text_y))
+
+            text_y += 50
+            developers_text = self.font.render(self.developers3, True, (255, 255, 255))
+            self.screen.blit(developers_text, (50, text_y))
+
+            text_y += 50
+            copyright_text = self.font.render(self.copyright, True, (255, 255, 255))
+            self.screen.blit(copyright_text, (50, text_y))
+
+            image_rect = self.image.get_rect(center=(self.screen.get_width() - 100, self.screen.get_height() // 2))
+            self.screen.blit(self.image, image_rect)
+
+            pygame.display.flip()
+
+        pygame.quit()
+        sys.exit()
 
 
 GameLauncher()
