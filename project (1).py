@@ -13,7 +13,7 @@ class GameLauncher:
         self.screen = pygame.display.set_mode(self.size)
         pygame.display.set_caption('Anime Solitaire: Memes & Gosling')
 
-        self.font = pygame.font.Font(None, 30)
+        self.font = pygame.font.SysFont('Impact', 30)
 
         self.running = True
         while self.running:
@@ -30,6 +30,8 @@ class GameLauncher:
                         self.show_about_window()
 
             self.screen.fill(self.GREEN)
+            background = pygame.image.load("data/fon.jpg")
+            self.screen.blit(background, (0, 0))
             self.draw_text()
             self.draw_buttons()
             pygame.display.flip()
@@ -44,25 +46,40 @@ class GameLauncher:
         self.screen.blit(text_surface, text_rect)
 
     def draw_buttons(self):
-        button_spacing = 50
+        button_spacing = 70
         button_width = 200
-        button_height = 40
+        button_height = 50
         play_button_text = self.font.render('Играть', True, (0, 0, 0))
+        play_button_surface = pygame.Surface((button_width, button_height),
+                                             pygame.SRCALPHA)  # Создание поверхности с альфа-каналом
+        pygame.draw.rect(play_button_surface, (255, 255, 255, 128), play_button_surface.get_rect(),
+                         border_radius=20)  # Заполнение поверхности цветом с альфа-каналом
         self.play_button_rect = pygame.Rect(self.WIDTH // 2 - button_width // 2, 150, button_width, button_height)
-        pygame.draw.rect(self.screen, (255, 255, 255), self.play_button_rect)
+        self.screen.blit(play_button_surface,
+                         (self.WIDTH // 2 - button_width // 2, 150))  # Отображение поверхности с кнопкой на экране
         self.screen.blit(play_button_text, (self.WIDTH // 2 - play_button_text.get_width() // 2, 155))
 
         stats_button_text = self.font.render('Статистика', True, (0, 0, 0))
+        stats_button_surface = pygame.Surface((button_width, button_height),
+                                              pygame.SRCALPHA)  # Создание поверхности с альфа-каналом
+        pygame.draw.rect(stats_button_surface, (255, 255, 255, 128), stats_button_surface.get_rect(),
+                         border_radius=20)  # Заполнение поверхности цветом с альфа-каналом
         self.stats_button_rect = pygame.Rect(self.WIDTH // 2 - button_width // 2, 150 + button_spacing, button_width,
                                              button_height)
-        pygame.draw.rect(self.screen, (255, 255, 255), self.stats_button_rect)
+        self.screen.blit(stats_button_surface, (
+        self.WIDTH // 2 - button_width // 2, 150 + button_spacing))  # Отображение поверхности с кнопкой на экране
         self.screen.blit(stats_button_text,
                          (self.WIDTH // 2 - stats_button_text.get_width() // 2, 155 + button_spacing))
 
         about_button_text = self.font.render('Об игре', True, (0, 0, 0))
+        about_button_surface = pygame.Surface((button_width, button_height),
+                                              pygame.SRCALPHA)  # Создание поверхности с альфа-каналом
+        pygame.draw.rect(about_button_surface, (255, 255, 255, 128), about_button_surface.get_rect(),
+                         border_radius=20)  # Заполнение поверхности цветом с альфа-каналом
         self.about_button_rect = pygame.Rect(self.WIDTH // 2 - button_width // 2, 150 + button_spacing * 2,
                                              button_width, button_height)
-        pygame.draw.rect(self.screen, (255, 255, 255), self.about_button_rect)
+        self.screen.blit(about_button_surface, (
+        self.WIDTH // 2 - button_width // 2, 150 + button_spacing * 2))  # Отображение поверхности с кнопкой на экране
         self.screen.blit(about_button_text,
                          (self.WIDTH // 2 - about_button_text.get_width() // 2, 155 + button_spacing * 2))
 
@@ -82,7 +99,7 @@ class GameLauncher:
 class PlayWindow:
     def __init__(self):
         pygame.init()
-        self.screen = pygame.display.set_mode((400, 300))
+        self.screen = pygame.display.set_mode((400, 400))
         pygame.display.set_caption("Выбор сложности")
 
     def show_window(self):
@@ -97,8 +114,7 @@ class PlayWindow:
                         self.open_game_window_kamina()
                     if simon_button.is_over(event.pos):
                         self.open_game_window_simon()
-
-            self.screen.fill((255, 255, 255))
+            self.screen.fill((0, 200, 0))
             kamina_button.draw(self.screen)
             simon_button.draw(self.screen)
 
@@ -118,13 +134,13 @@ class PlayWindow:
 class Button:
     def __init__(self, x, y, width, height, text):
         self.rect = pygame.Rect(x, y, width, height)
-        self.color = (0, 128, 255)
+        self.color = (255, 255, 255)
         self.text = text
 
     def draw(self, screen):
         pygame.draw.rect(screen, self.color, self.rect)
-        font = pygame.font.Font(None, 36)
-        text = font.render(self.text, True, (255, 255, 255))
+        font = pygame.font.SysFont('Impact', 30)
+        text = font.render(self.text, True, (0, 0, 0))
         text_rect = text.get_rect(center=self.rect.center)
         screen.blit(text, text_rect)
 
@@ -135,8 +151,8 @@ class Button:
 play_window = PlayWindow()
 
 # Создаем кнопки
-kamina_button = Button(100, 50, 200, 100, "Камина")
-simon_button = Button(100, 160, 200, 100, "Симон")
+kamina_button = Button(100, 80, 200, 100, "Камина")
+simon_button = Button(100, 190, 200, 100, "Симон")
 
 
 class StatsWindow:
