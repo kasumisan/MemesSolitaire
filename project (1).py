@@ -114,7 +114,11 @@ class PlayWindow:
                         self.open_game_window_kamina()
                     if simon_button.is_over(event.pos):
                         self.open_game_window_simon()
-            self.screen.fill((0, 200, 0))
+
+            self.GREEN = (0, 200, 0)
+            self.screen.fill(self.GREEN)
+            background = pygame.image.load("data/fon.jpg")
+            self.screen.blit(background, (0, 0))
             kamina_button.draw(self.screen)
             simon_button.draw(self.screen)
 
@@ -138,11 +142,15 @@ class Button:
         self.text = text
 
     def draw(self, screen):
-        pygame.draw.rect(screen, self.color, self.rect)
+        button_surface = pygame.Surface((self.rect.width, self.rect.height),
+                                        pygame.SRCALPHA)
+        pygame.draw.rect(button_surface, (*self.color, 128), button_surface.get_rect(),
+                         border_radius=20)
         font = pygame.font.SysFont('Impact', 30)
         text = font.render(self.text, True, (0, 0, 0))
-        text_rect = text.get_rect(center=self.rect.center)
-        screen.blit(text, text_rect)
+        text_rect = text.get_rect(center=button_surface.get_rect().center)
+        button_surface.blit(text, text_rect)
+        screen.blit(button_surface, self.rect)  # Отображение поверхности с кнопкой на экране
 
     def is_over(self, pos):
         return self.rect.collidepoint(pos)
@@ -164,13 +172,17 @@ class AboutWindow:
     def __init__(self, screen):
         self.screen = screen
         self.GREEN = (0, 200, 0)
-        self.font = pygame.font.Font(None, 25)
+        self.font = pygame.font.SysFont('Impact', 20)
         self.version = "Версия игры: 0.1"
         self.developers = "Разработчики: "
         self.developers2 = "Швайкова Кира, "
         self.developers3 = "Симонова Арина"
         self.copyright = "© 2023 Все права защищены"
         self.image = pygame.image.load('data/rayan1.jpg')
+        self.back_button_color = (255, 255, 255)
+        self.back_button_rect = pygame.Rect(50, self.screen.get_height() - 70, 100, 50)
+        self.back_button_text = 'Назад'
+        self.back_button_text_surface = self.font.render(self.back_button_text, True, (0, 0, 0))
 
     def show_window(self):
         running = True
@@ -178,9 +190,16 @@ class AboutWindow:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    mouse_pos = pygame.mouse.get_pos()
+                    if self.back_button_rect.collidepoint(mouse_pos):
+                        GameLauncher()
+                        running = False
 
             self.screen.fill(self.GREEN)
-            text_y = 100
+            background = pygame.image.load("data/fon.jpg")
+            self.screen.blit(background, (0, 0))
+            text_y = 70
             version_text = self.font.render(self.version, True, (255, 255, 255))
             self.screen.blit(version_text, (50, text_y))
 
@@ -200,8 +219,13 @@ class AboutWindow:
             copyright_text = self.font.render(self.copyright, True, (255, 255, 255))
             self.screen.blit(copyright_text, (50, text_y))
 
-            image_rect = self.image.get_rect(center=(self.screen.get_width() - 100, self.screen.get_height() // 2))
+            image_rect = self.image.get_rect(center=(self.screen.get_width() - 100, self.screen.get_height() // 2.5))
             self.screen.blit(self.image, image_rect)
+
+            pygame.draw.rect(self.screen, self.back_button_color, self.back_button_rect, border_radius=20)
+            back_text_rect = self.back_button_text_surface.get_rect(center=self.back_button_rect.center)
+            self.screen.blit(self.back_button_text_surface, back_text_rect)
+
 
             pygame.display.flip()
 
