@@ -80,8 +80,63 @@ class GameLauncher:
 
 
 class PlayWindow:
+    def __init__(self):
+        pygame.init()
+        self.screen = pygame.display.set_mode((400, 300))
+        pygame.display.set_caption("Выбор сложности")
+
     def show_window(self):
+        running = True
+        while running:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    # Проверяем клик по кнопке
+                    if kamina_button.is_over(event.pos):
+                        self.open_game_window_kamina()
+                    if simon_button.is_over(event.pos):
+                        self.open_game_window_simon()
+
+            self.screen.fill((255, 255, 255))
+            kamina_button.draw(self.screen)
+            simon_button.draw(self.screen)
+
+            pygame.display.flip()
+
+        pygame.quit()
+
+    def open_game_window_kamina(self):
+        # Отображение игры Камина
         pass
+
+    def open_game_window_simon(self):
+        # Отображение игры Симон
+        pass
+
+
+class Button:
+    def __init__(self, x, y, width, height, text):
+        self.rect = pygame.Rect(x, y, width, height)
+        self.color = (0, 128, 255)
+        self.text = text
+
+    def draw(self, screen):
+        pygame.draw.rect(screen, self.color, self.rect)
+        font = pygame.font.Font(None, 36)
+        text = font.render(self.text, True, (255, 255, 255))
+        text_rect = text.get_rect(center=self.rect.center)
+        screen.blit(text, text_rect)
+
+    def is_over(self, pos):
+        return self.rect.collidepoint(pos)
+
+
+play_window = PlayWindow()
+
+# Создаем кнопки
+kamina_button = Button(100, 50, 200, 100, "Камина")
+simon_button = Button(100, 160, 200, 100, "Симон")
 
 
 class StatsWindow:
@@ -99,8 +154,7 @@ class AboutWindow:
         self.developers2 = "Швайкова Кира, "
         self.developers3 = "Симонова Арина"
         self.copyright = "© 2023 Все права защищены"
-        self.image = pygame.image.load('data/rayan1.png')
-
+        self.image = pygame.image.load('data/rayan1.jpg')
 
     def show_window(self):
         running = True
