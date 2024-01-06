@@ -1,6 +1,7 @@
 import pygame
 import sys
 import os
+from sol import *
 
 
 class GameLauncher:
@@ -13,7 +14,7 @@ class GameLauncher:
         self.screen = pygame.display.set_mode(self.size)
         pygame.display.set_caption('Anime Solitaire: Memes & Gosling')
 
-        self.font = pygame.font.SysFont('Impact', 30)
+        self.font = pygame.font.Font('Chalkduster.ttf', 30)
 
         self.running = True
         while self.running:
@@ -30,7 +31,7 @@ class GameLauncher:
                         self.show_about_window()
 
             self.screen.fill(self.GREEN)
-            background = pygame.image.load("data/fon.jpg")
+            background = pygame.image.load(os.path.join('data', 'game_data', 'fon.jpg'))
             self.screen.blit(background, (0, 0))
             self.draw_text()
             self.draw_buttons()
@@ -117,7 +118,7 @@ class PlayWindow:
 
             self.GREEN = (0, 200, 0)
             self.screen.fill(self.GREEN)
-            background = pygame.image.load("data/fon.jpg")
+            background = pygame.image.load(os.path.join('data', 'game_data', 'fon.jpg'))
             self.screen.blit(background, (0, 0))
             kamina_button.draw(self.screen)
             simon_button.draw(self.screen)
@@ -132,7 +133,8 @@ class PlayWindow:
 
     def open_game_window_simon(self):
         # Отображение игры Симон
-        pass
+        simon_game = MemoryGame()
+        simon_game.start_game()
 
 
 class Button:
@@ -172,7 +174,7 @@ class AboutWindow:
     def __init__(self, screen):
         self.screen = screen
         self.GREEN = (0, 200, 0)
-        self.font = pygame.font.SysFont('Impact', 20)
+        self.font = pygame.font.Font('Mikar.ttf', 20)
         self.version = "Версия игры: 0.1"
         self.developers = "Разработчики: "
         self.developers2 = "Швайкова Кира, "
@@ -197,7 +199,7 @@ class AboutWindow:
                         running = False
 
             self.screen.fill(self.GREEN)
-            background = pygame.image.load("data/fon.jpg")
+            background = pygame.image.load(os.path.join('data', 'game_data', 'fon.jpg'))
             self.screen.blit(background, (0, 0))
             text_y = 70
             version_text = self.font.render(self.version, True, (255, 255, 255))
