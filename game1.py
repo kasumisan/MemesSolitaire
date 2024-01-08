@@ -1,6 +1,8 @@
-from main import *
+import pygame
 import random
 import time
+import os
+
 
 class MemoryGame:
     def __init__(self):
@@ -8,14 +10,13 @@ class MemoryGame:
         pygame.init()
 
         # Установка параметров окна
-        self.win_width = 800
-        self.win_height = 400
-        self.win = pygame.display.set_mode((self.win_width, self.win_height))
-        pygame.display.set_caption("Solitaire≽^•⩊•^≼")
-
+        self.size = self.WIDTH, self.HEIGHT = 800, 450
+        self.screen = pygame.display.set_mode(self.size)
+        pygame.display.set_caption("solitaire≽^•⩊•^≼")
+        self.cursor_img = pygame.image.load(os.path.join('data', 'arrow.png'))
         # Загрузка изображения фона
         self.background = pygame.image.load(os.path.join('data', 'game_data', 'fon.jpg'))
-        self.background = pygame.transform.scale(self.background, (self.win_width, self.win_height))
+        self.background = pygame.transform.scale(self.background, (self.WIDTH, self.HEIGHT))
 
         # Загрузка изображений карточек
         self.cards_path = 'data/cards'
@@ -35,7 +36,7 @@ class MemoryGame:
         random.shuffle(self.cards)
 
         # Отображение фона
-        self.win.blit(self.background, (0, 0))
+        self.screen.blit(self.background, (0, 0))
 
         # Отображение окна
         pygame.display.flip()
@@ -74,25 +75,29 @@ class MemoryGame:
                                 self.first_card = None
 
             # Отображение фона
-            self.win.blit(self.background, (0, 0))
+            self.screen.blit(self.background, (0, 0))
 
             # Отображение карточек
             for i, rect in enumerate(self.card_rects):
                 if i in self.matched:
                     continue
                 if i == self.first_card:
-                    self.win.blit(self.cards[i], (rect.x, rect.y))
+                    self.screen.blit(self.cards[i], (rect.x, rect.y))
                 else:
-                    self.win.blit(self.card_back, (rect.x, rect.y))
+                    self.screen.blit(self.card_back, (rect.x, rect.y))
 
             # Отображение счёта
             score_display = self.font.render(f'Очки: {self.score}', True, (255, 255, 255))
-            self.win.blit(score_display, (10, 10))
+            self.screen.blit(score_display, (10, 10))
 
             # Отображение таймера
             elapsed_time = int(time.time() - self.start_time)
             timer_display = self.font.render(f'Время: {elapsed_time}', True, (255, 255, 255))
-            self.win.blit(timer_display, (self.win_width - 150, 10))
+            self.screen.blit(timer_display, (self.WIDTH - 150, 10))
+            pygame.mouse.set_visible(False)
+            x, y = pygame.mouse.get_pos()
+            if pygame.mouse.get_focused():
+                self.screen.blit(self.cursor_img, (x, y))
 
             # Обновление окна
             pygame.display.flip()
@@ -108,10 +113,10 @@ class MemoryGame:
         self.card_rects = []
         for card in self.cards:
             card = pygame.transform.scale(card, (card_width, card_height))
-            self.win.blit(card, (x, y))
+            self.screen.blit(card, (x, y))
             self.card_rects.append(pygame.Rect(x, y, card_width, card_height))
             x += card_width + 20
-            if x > self.win_width - card_width:
+            if x > self.WIDTH - card_width:
                 x = 50
                 y += card_height + 20
 
@@ -121,4 +126,3 @@ class MemoryGame:
 
         # Запуск игры
         self.run_game()
-
