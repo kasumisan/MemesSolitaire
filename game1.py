@@ -9,11 +9,12 @@ from animation import MySprite
 
 class MemoryGame:
     def __init__(self):
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
         # Инициализация Pygame
         pygame.init()
 
         # Установка параметров окна
-        self.size = self.WIDTH, self.HEIGHT = 800, 450
+        self.size = self.WIDTH, self.HEIGHT = 800, 600
         self.screen = pygame.display.set_mode(self.size)
         pygame.display.set_caption("solitaire≽^•⩊•^≼")
         self.cursor_img = pygame.image.load(os.path.join('data', 'arrow.png'))
@@ -104,7 +105,7 @@ class MemoryGame:
             x, y = pygame.mouse.get_pos()
             if pygame.mouse.get_focused():
                 self.screen.blit(self.cursor_img, (x, y))
-            if self.score >= 60:
+            if self.score >= 90:
                 self.show_result_window()
                 self.stop_timer()
                 # Обновление окна
@@ -141,7 +142,7 @@ class MemoryGame:
             time_surf = self.font.render(time_text, True, (255, 255, 255))
             time_rect = time_surf.get_rect(center=(self.WIDTH / 2, self.HEIGHT / 2 - 85))
             self.screen.blit(time_surf, time_rect)
-            home_button = pygame.Rect(50, 350, 700, 50)
+            home_button = pygame.Rect(50, 500, 700, 50)
             pygame.draw.rect(self.screen, (255, 255, 255), home_button, border_radius=10)
             home_surf = pygame.Surface((700, 50), pygame.SRCALPHA)
             pygame.draw.rect(home_surf, (255, 20, 147, 200), (0, 0, 700, 50), border_radius=10)
@@ -198,7 +199,3 @@ class MemoryGame:
 
         # Запуск игры
         self.run_game()
-
-
-kamina_game = MemoryGame()
-kamina_game.start_game()

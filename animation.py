@@ -13,7 +13,7 @@ class MySprite(pygame.sprite.Sprite):
 
         self.image = self.images[self.index]
 
-        self.rect = pygame.Rect(290, 200, 150, 198)
+        self.rect = pygame.Rect(290, 300, 150, 198)
 
     def update(self):
         self.index += 1
