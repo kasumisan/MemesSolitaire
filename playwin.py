@@ -1,6 +1,7 @@
 import pygame
 import os
 from game1 import MemoryGame
+from game2 import Play
 
 
 class PlayWindow:
@@ -51,8 +52,8 @@ class PlayWindow:
         kamina_game.start_game()
 
     def open_game_window_simon(self):
-        # Отображение игры Симон
-        pass
+        simon_game = Play()
+        simon_game.run()
 
     def draw_text(self):
         text_surface = self.font.render('Вы котик?', True, (242, 185, 224))
@@ -91,6 +92,3 @@ class Button:
 kamina_button = Button(75, 300, 250, 50, "Покушаем и спать")
 simon_button = Button(475, 300, 250, 50, "Кисдуем на работу!")
 back_button = Button(275, 370, 250, 50, 'Назад')
-
-# play_window = PlayWindow()
-# play_window.show_window()

@@ -113,10 +113,15 @@ class Level_01(Level):
 
 class Play:
     def run(self):
+        cursor_img = pygame.image.load(os.path.join('data', 'arrow.png'))
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         pygame.init()
         size = [SCREEN_WIDTH, SCREEN_HEIGHT]
         screen = pygame.display.set_mode(size)
+        x, y = pygame.mouse.get_pos()
+        if pygame.mouse.get_focused():
+            self.screen.blit(self.cursor_img, (x, y))
+        pygame.mouse.set_visible(False)
         pygame.display.set_caption("Платформер")
         player = Player()
         level_list = []
@@ -130,6 +135,7 @@ class Play:
         active_sprite_list.add(player)
         done = False
         clock = pygame.time.Clock()
+
         while not done:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -158,5 +164,3 @@ class Play:
         pygame.quit()
 
 
-game = Play()
-game.run()
