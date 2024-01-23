@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load('idle.png')
+        self.image = pygame.image.load('data/game_data/idle.png')
         self.rect = self.image.get_rect()
         self.change_x = 0
         self.change_y = 0
