@@ -4,7 +4,7 @@ import os
 SCREEN_WIDTH = 1050
 SCREEN_HEIGHT = 900
 
-bg = pygame.image.load('bg.png')
+bg = pygame.image.load('data/game_data/bg.jpeg')
 
 
 class Player(pygame.sprite.Sprite):
