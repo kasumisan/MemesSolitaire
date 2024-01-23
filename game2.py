@@ -120,7 +120,7 @@ class Play:
         screen = pygame.display.set_mode(size)
         x, y = pygame.mouse.get_pos()
         if pygame.mouse.get_focused():
-            self.screen.blit(self.cursor_img, (x, y))
+            screen.blit(cursor_img, (x, y))
         pygame.mouse.set_visible(False)
         pygame.display.set_caption("Платформер")
         player = Player()
