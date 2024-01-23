@@ -4,7 +4,7 @@ import os
 SCREEN_WIDTH = 1050
 SCREEN_HEIGHT = 900
 
-bg = pygame.image.load('data/game_data/bg.jpeg')
+bg = pygame.image.load('data/game_data/bg.jpg')
 
 
 class Player(pygame.sprite.Sprite):
@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self):
         super().__init__()
-        self.image = pygame.image.load('idle.png')
+        self.image = pygame.image.load('data/game_data/idle.png')
         self.rect = self.image.get_rect()
         self.change_x = 0
         self.change_y = 0
@@ -73,7 +73,7 @@ class Player(pygame.sprite.Sprite):
 class Platform(pygame.sprite.Sprite):
     def __init__(self, width, height):
         super().__init__()
-        self.image = pygame.image.load('platform.png')
+        self.image = pygame.image.load('data/game_data/platform.png')
         self.rect = self.image.get_rect()
 
 
@@ -99,7 +99,9 @@ class Level_01(Level):
             [210, 32, 600, 300],
             [210, 32, 400, 200],  # Добавляем еще одну платформу
             [210, 32, 100, 100],
-            [210, 32, 100, 800]
+            [210, 32, 100, 800],
+            [210, 32, 450, 700],
+            [210, 32, 700, 600]
         ]
         for platform in level:
             block = Platform(platform[0], platform[1])
