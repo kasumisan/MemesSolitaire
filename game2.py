@@ -237,9 +237,9 @@ class ResultWindow:
         # Save data to SQLite database
         conn = sqlite3.connect('game_data.db')
         c = conn.cursor()
-        c.execute("CREATE TABLE IF NOT EXISTS results (score INTEGER, play_time REAL, date TEXT)")
+        c.execute("CREATE TABLE IF NOT EXISTS results (play_time REAL, date TEXT)")
         date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        c.execute("INSERT INTO results (score, play_time, date) VALUES (?, ?, ?)", (self.score, self.play_time, date))
+        c.execute("INSERT INTO results (play_time, date) VALUES (?, ?)", (self.play_time, date))
         conn.commit()
         conn.close()
 

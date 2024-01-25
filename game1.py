@@ -172,8 +172,8 @@ class MemoryGame:
     def save_to_database(self):
         conn = sqlite3.connect('game_results.db')
         c = conn.cursor()
-        c.execute('CREATE TABLE IF NOT EXISTS game_results (score INTEGER, time_taken INTEGER)')
-        c.execute('INSERT INTO game_results (score, time_taken) VALUES (?, ?)', (self.score, self.elapsed_time))
+        c.execute('CREATE TABLE IF NOT EXISTS game_result (score INTEGER, elapsed_time INTEGER)')
+        c.execute('INSERT INTO game_result (score, elapsed_time) VALUES (?, ?)', (self.score, self.elapsed_time))
         conn.commit()
         conn.close()
 
