@@ -1,8 +1,10 @@
 import pygame
 import os
+import sqlite3
+from datetime import datetime
 
 SCREEN_WIDTH = 1050
-SCREEN_HEIGHT = 900
+SCREEN_HEIGHT = 700
 
 bg = pygame.image.load('data/game_data/bg.jpg')
 
@@ -16,6 +18,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.change_x = 0
         self.change_y = 0
+        self.score = 0
 
     def update(self):
         self.calc_grav()
@@ -77,17 +80,40 @@ class Platform(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
 
+class Coin(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.image.load('data/game_data/coin.png')
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+
+
 class Level(object):
     def __init__(self, player):
         self.platform_list = pygame.sprite.Group()
+        self.coin_list = pygame.sprite.Group()
         self.player = player
+        self.score = 0
 
     def update(self):
         self.platform_list.update()
+        self.coin_list.update()
+        player_hit_list = pygame.sprite.spritecollide(self.player, self.coin_list, True)
+        for coin in player_hit_list:
+            self.score += 10
 
     def draw(self, screen):
         screen.blit(bg, (0, 0))
         self.platform_list.draw(screen)
+        self.coin_list.draw(screen)
+        for coin in self.coin_list:
+            if coin.alive():
+                screen.blit(coin.image, coin.rect)
+
+        font = pygame.font.Font('data/MP Manga.ttf', 36)
+        score_text = font.render("Очки: " + str(self.score), True, (255, 255, 255))
+        screen.blit(score_text, (10, 10))
 
 
 class Level_01(Level):
@@ -97,7 +123,7 @@ class Level_01(Level):
             [210, 32, 500, 500],
             [210, 32, 200, 400],
             [210, 32, 600, 300],
-            [210, 32, 400, 200],  # Добавляем еще одну платформу
+            [210, 32, 400, 200],
             [210, 32, 100, 100],
             [210, 32, 100, 800],
             [210, 32, 450, 700],
@@ -110,18 +136,24 @@ class Level_01(Level):
             block.player = self.player
             self.platform_list.add(block)
 
+        coins = [
+            [400, 500],
+            [200, 500],
+            [600, 500],
+        ]
+        for coin in coins:
+            coin_obj = Coin(coin[0], coin[1])
+            self.coin_list.add(coin_obj)
+
 
 class Play:
     def run(self):
+        start_time = pygame.time.get_ticks()
         cursor_img = pygame.image.load(os.path.join('data', 'arrow.png'))
         os.environ['SDL_VIDEO_CENTERED'] = '1'
         pygame.init()
         size = [SCREEN_WIDTH, SCREEN_HEIGHT]
         screen = pygame.display.set_mode(size)
-        x, y = pygame.mouse.get_pos()
-        if pygame.mouse.get_focused():
-            screen.blit(cursor_img, (x, y))
-        pygame.mouse.set_visible(False)
         pygame.display.set_caption("Платформер")
         player = Player()
         level_list = []
@@ -152,15 +184,66 @@ class Play:
                         player.stop()
                     if event.key == pygame.K_RIGHT and player.change_x > 0:
                         player.stop()
+            if len(current_level.coin_list) == 0:
+                end_time = pygame.time.get_ticks()
+
+                play_time = (end_time - start_time) / 1000
+                result_window = ResultWindow(current_level.player.score, play_time)
+                result_window.display()
+                done = True
 
             active_sprite_list.update()
             current_level.update()
+            if player.rect.right >= SCREEN_WIDTH:
+                player.rect.right = SCREEN_WIDTH
+
+            if player.rect.left <= 0:
+                player.rect.left = 0
             current_level.draw(screen)
             active_sprite_list.draw(screen)
 
             clock.tick(60)
+            x, y = pygame.mouse.get_pos()
+            if pygame.mouse.get_focused():
+                screen.blit(cursor_img, (x, y))
+            pygame.mouse.set_visible(False)
             pygame.display.flip()
 
         pygame.quit()
 
 
+class ResultWindow:
+    def __init__(self, score, play_time):
+        os.environ['SDL_VIDEO_CENTERED'] = '1'
+        self.score = score
+        self.play_time = play_time
+
+    def display(self):
+        pygame.init()
+        size = [800, 450]
+        screen = pygame.display.set_mode(size)
+        background = pygame.image.load(os.path.join('data', 'game_data', 'fon4.jpg'))
+        screen.blit(background, (0, 0))
+        pygame.display.set_caption("Результаты")
+
+        font = pygame.font.Font('data/MP Manga.ttf', 36)
+        title_text = font.render("Вы собрали все монеты!", True, (255, 255, 255))
+        time_text = font.render("Время: " + str(round(self.play_time, 2)) + " сек", True, (255, 255, 255))
+        screen.blit(title_text, (160, 150))
+        screen.blit(time_text, (250, 300))
+
+        pygame.display.flip()
+
+        # Save data to SQLite database
+        conn = sqlite3.connect('game_data.db')
+        c = conn.cursor()
+        c.execute("CREATE TABLE IF NOT EXISTS results (score INTEGER, play_time REAL, date TEXT)")
+        date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        c.execute("INSERT INTO results (score, play_time, date) VALUES (?, ?, ?)", (self.score, self.play_time, date))
+        conn.commit()
+        conn.close()
+
+        pygame.time.wait(3000)  # Wait for 3 seconds before closing the window
+        from main import GameLauncher
+        gamelau = GameLauncher()
+        gamelau.run()
