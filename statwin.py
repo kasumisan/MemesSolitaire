@@ -18,6 +18,7 @@ class GameResultsWindow:
     def load_game_data(self):
         conn = sqlite3.connect("game_data.db")
         cursor = conn.cursor()
+        cursor.execute("CREATE TABLE IF NOT EXISTS results (play_time REAL, date TEXT)")
         cursor.execute("SELECT * FROM results")
         data = cursor.fetchall()
         conn.close()
@@ -26,6 +27,7 @@ class GameResultsWindow:
     def load_game_results(self):
         conn = sqlite3.connect("game_results.db")
         cursor = conn.cursor()
+        cursor.execute('CREATE TABLE IF NOT EXISTS game_result (score INTEGER, elapsed_time INTEGER)')
         cursor.execute("SELECT * FROM game_result")
         data = cursor.fetchall()
         conn.close()
@@ -55,8 +57,6 @@ class GameResultsWindow:
             self.render_text('Время', 50, 100)
             self.render_text('Дата', 150, 100)
             self.render_text('Очки', 600, 100)
-            self.render_text('Время', 700, 100)
-
             y = 150
             for row in self.game_data:
                 for i, value in enumerate(row):
@@ -76,5 +76,4 @@ class GameResultsWindow:
                 self.screen.blit(cursor_img, (x, y))
             pygame.mouse.set_visible(False)
             pygame.display.flip()
-
         pygame.quit()
