@@ -65,6 +65,7 @@ class MemoryGame:
 
     def run_game(self):
         run = True
+        start_time = pygame.time.get_ticks()
         while run:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -98,9 +99,10 @@ class MemoryGame:
             self.screen.blit(score_display, (10, 10))
 
             # Отображение таймера
-            self.elapsed_time = int(time.time() - self.start_time)
+            end_time = pygame.time.get_ticks()
+            self.elapsed_time = (end_time - start_time) / 1000
             timer_display = self.font.render(f'Время: {self.elapsed_time}', True, (255, 255, 255))
-            self.screen.blit(timer_display, (self.WIDTH - 160, 10))
+            self.screen.blit(timer_display, (self.WIDTH - 200, 10))
             pygame.mouse.set_visible(False)
             x, y = pygame.mouse.get_pos()
             if pygame.mouse.get_focused():

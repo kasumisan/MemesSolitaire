@@ -69,9 +69,9 @@ class GameLauncher:
         play_window.show_window()
 
     def show_statistics_window(self):
-        from statwin import StatsWindow
-        stats_window = StatsWindow()
-        stats_window.show_window()
+        from statwin import GameResultsWindow
+        window = GameResultsWindow()
+        window.run()
 
     def show_about_window(self):
         from abtwin import AboutWindow
